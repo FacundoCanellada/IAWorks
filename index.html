@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAWorks - Automatiza tu Crecimiento</title>
+    
+    <!-- TailwindCSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS Externo -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
+
+    <!-- Contenedor Principal de la Aplicación -->
+    <div id="app">
+
+        <!-- PÁGINA PÚBLICA: LANDING -->
+        <div id="landing-page" class="page active">
+            <!-- Barra de Navegación -->
+            <header class="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md shadow-sm">
+                <div class="container flex h-16 items-center justify-between px-4 md:px-6">
+                    <a href="#" onclick="navigateTo('landing-page')" class="flex items-center space-x-2">
+                        <span class="font-bold text-2xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">IAWorks</span>
+                    </a>
+                    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                        <a href="#services" class="text-gray-600 hover:text-indigo-600 transition-colors">Servicios</a>
+                        <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition-colors">Precios</a>
+                    </nav>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="navigateTo('login-page')" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Iniciar Sesión</button>
+                        <button onclick="navigateTo('register-page')" class="btn-primary rounded-full px-6 py-2 font-semibold shadow-lg">Registrarse</button>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                <!-- Sección Hero -->
+                <section class="relative py-24 lg:py-32 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+                    <div class="container mx-auto px-4 md:px-6">
+                        <div class="flex flex-col items-center text-center space-y-8">
+                            <h1 class="scroll-reveal text-5xl font-bold tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl">
+                                Automatiza tu <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Crecimiento</span>
+                            </h1>
+                            <p class="scroll-reveal scroll-reveal-delay-1 mx-auto max-w-[700px] text-xl text-gray-600">
+                                Extrae leads, lanza campañas de email marketing y escala tu outreach en Instagram. Todo en una sola plataforma.
+                            </p>
+                            <button onclick="navigateToSection('services')" class="scroll-reveal scroll-reveal-delay-2 btn-primary rounded-full px-8 py-4 text-lg font-semibold shadow-xl">Descubrir Servicios</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Servicios -->
+                <section id="services" class="py-24 lg:py-32">
+                    <div class="container mx-auto px-4 md:px-6">
+                        <div class="text-center space-y-4">
+                            <h2 class="scroll-reveal text-4xl font-bold tracking-tighter sm:text-5xl">Nuestras Herramientas</h2>
+                            <p class="scroll-reveal scroll-reveal-delay-1 mx-auto max-w-[700px] text-xl text-gray-600">Potencia tu negocio con nuestras suites de automatización.</p>
+                        </div>
+                        <div class="mx-auto mt-20 grid max-w-5xl gap-8 md:grid-cols-3">
+                            <div class="scroll-reveal-scale scroll-reveal-delay-1 card-hover group flex flex-col items-center space-y-4 rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
+                                <div class="rounded-full bg-indigo-100 p-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-indigo-200">
+                                    <i data-lucide="map-pin" class="h-10 w-10 text-indigo-600 icon-hover"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold">Extractor de Leads</h3>
+                                <p class="text-center text-gray-600">Encuentra clientes potenciales en Google Maps por tipo de negocio y ubicación.</p>
+                                <button onclick="navigateToSection('pricing')" class="mt-4 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-all hover:translate-x-2">Ver Planes →</button>
+                            </div>
+                            <div class="scroll-reveal-scale scroll-reveal-delay-2 card-hover group flex flex-col items-center space-y-4 rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
+                                <div class="rounded-full bg-purple-100 p-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-purple-200">
+                                    <i data-lucide="mail" class="h-10 w-10 text-purple-600 icon-hover"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold">Email Marketing</h3>
+                                <p class="text-center text-gray-600">Lanza campañas personalizadas y automatizadas a tu lista de leads.</p>
+                                <button onclick="navigateToSection('pricing')" class="mt-4 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-all hover:translate-x-2">Ver Planes →</button>
+                            </div>
+                            <div class="scroll-reveal-scale scroll-reveal-delay-3 card-hover group flex flex-col items-center space-y-4 rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
+                                <div class="rounded-full bg-pink-100 p-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-pink-200">
+                                    <i data-lucide="send" class="h-10 w-10 text-pink-600 icon-hover"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold">Instagram Setter</h3>
+                                <p class="text-center text-gray-600">Automatiza el envío de mensajes fríos y agenda llamadas desde Instagram.</p>
+                                <button onclick="navigateToSection('pricing')" class="mt-4 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-all hover:translate-x-2">Ver Planes →</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Sección de Precios -->
+                <section id="pricing" class="py-24 lg:py-32 bg-gray-100">
+                    <div class="container mx-auto px-4 md:px-6 text-center">
+                        <div class="text-center space-y-4">
+                            <h2 class="scroll-reveal text-4xl font-bold tracking-tighter sm:text-5xl">Planes que se adaptan a ti</h2>
+                            <p class="scroll-reveal scroll-reveal-delay-1 mx-auto max-w-[700px] text-xl text-gray-600">Elige el plan que mejor se ajuste a tus necesidades y empieza a automatizar hoy mismo.</p>
+                        </div>
+                        <div class="mx-auto mt-20 grid max-w-5xl gap-8 md:grid-cols-3">
+                            <div class="scroll-reveal-left scroll-reveal-delay-1 card-hover flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
+                                <div>
+                                    <h3 class="text-2xl font-bold">Casual</h3>
+                                    <div class="mt-4"><span class="text-4xl font-bold">20€</span><span class="text-gray-500">/mes</span></div>
+                                    <p class="mt-2 text-gray-600">Perfecto para empezar a generar leads.</p>
+                                    <ul class="mt-8 space-y-3 text-left">
+                                        <li class="flex items-center fade-in"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Leads ilimitados</li>
+                                        <li class="flex items-center fade-in" style="animation-delay: 0.1s;"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Soporte por email</li>
+                                    </ul>
+                                </div>
+                                <button onclick="navigateToCheckout('Casual', 20)" class="ripple mt-8 w-full rounded-full border-2 border-gray-300 py-3 font-semibold text-gray-700 transition-all hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-600 hover:scale-105">Elegir Plan</button>
+                            </div>
+                            <div class="scroll-reveal scroll-reveal-delay-2 card-hover flex flex-col justify-between rounded-2xl border-2 border-indigo-500 bg-white p-8 shadow-2xl transform scale-105">
+                                <div class="bg-indigo-500 text-white rounded-full px-4 py-1 text-sm font-semibold w-fit mx-auto -mt-12 animate-pulse">Más Popular</div>
+                                <div>
+                                    <h3 class="text-2xl font-bold">Premium</h3>
+                                    <div class="mt-4"><span class="text-4xl font-bold">40€</span><span class="text-gray-500">/mes</span></div>
+                                    <p class="mt-2 text-gray-600">Potencia tu estrategia con email marketing.</p>
+                                    <ul class="mt-8 space-y-3 text-left">
+                                        <li class="flex items-center fade-in"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Todo lo del plan Casual</li>
+                                        <li class="flex items-center fade-in" style="animation-delay: 0.1s;"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Email Marketing Automático</li>
+                                        <li class="flex items-center fade-in" style="animation-delay: 0.2s;"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Plantillas personalizables</li>
+                                    </ul>
+                                </div>
+                                <button onclick="navigateToCheckout('Premium', 40)" class="btn-primary ripple mt-8 w-full rounded-full py-3 font-semibold shadow-lg">Elegir Plan</button>
+                            </div>
+                            <div class="scroll-reveal-right scroll-reveal-delay-3 card-hover flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
+                                <div>
+                                    <h3 class="text-2xl font-bold">Golden</h3>
+                                    <div class="mt-4"><span class="text-4xl font-bold">60€</span><span class="text-gray-500">/mes</span></div>
+                                    <p class="mt-2 text-gray-600">La suite completa para escalar tu negocio.</p>
+                                    <ul class="mt-8 space-y-3 text-left">
+                                        <li class="flex items-center fade-in"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Todo lo del plan Premium</li>
+                                        <li class="flex items-center fade-in" style="animation-delay: 0.1s;"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Instagram Setter Automático</li>
+                                        <li class="flex items-center fade-in" style="animation-delay: 0.2s;"><i data-lucide="check-circle" class="mr-3 h-5 w-5 text-green-500"></i> Soporte prioritario</li>
+                                    </ul>
+                                </div>
+                                <button onclick="navigateToCheckout('Golden', 60)" class="ripple mt-8 w-full rounded-full border-2 border-gray-300 py-3 font-semibold text-gray-700 transition-all hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-600 hover:scale-105">Elegir Plan</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            
+            <!-- Footer -->
+            <footer class="flex flex-col gap-2 sm:flex-row py-10 w-full shrink-0 items-center px-4 md:px-6 border-t bg-white">
+                <p class="text-xs text-gray-500">© 2024 IAWorks. Todos los derechos reservados.</p>
+                <nav class="sm:ml-auto flex gap-4 sm:gap-6">
+                    <a href="#" class="text-xs text-gray-500 hover:text-gray-700">Términos de Servicio</a>
+                    <a href="#" class="text-xs text-gray-500 hover:text-gray-700">Política de Privacidad</a>
+                </nav>
+            </footer>
+        </div>
+
+        <!-- PÁGINA DE CHECKOUT -->
+        <div id="checkout-page" class="page">
+            <div class="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+                <div class="w-full max-w-lg p-8 rounded-2xl bg-white shadow-2xl">
+                <button onclick="navigateTo('landing-page')" class="mb-4 text-sm text-gray-600 hover:text-gray-800 flex items-center">
+                    <i data-lucide="arrow-left" class="mr-2 h-4 w-4"></i> Volver a los planes
+                </button>
+                <h2 class="text-3xl font-bold text-center">Resumen de tu Pedido</h2>
+                <div class="mt-8 p-6 rounded-xl bg-gray-50 border border-gray-200">
+                    <p class="text-sm text-gray-600">Plan Seleccionado</p>
+                    <p id="checkout-plan-name" class="text-2xl font-bold mt-1">-</p>
+                    <p id="checkout-plan-price" class="text-3xl font-bold mt-2 text-indigo-600">-</p>
+                </div>
+                <form onsubmit="handleCheckout(event)" class="mt-8 space-y-6">
+                    <div>
+                        <label class="text-sm font-medium">Método de Pago</label>
+                        <div class="mt-2 grid grid-cols-2 gap-4">
+                            <button type="button" class="p-4 rounded-lg border-2 border-gray-300 hover:border-indigo-500 focus:border-indigo-500 transition-colors">
+                                <i data-lucide="credit-card" class="h-6 w-6 mx-auto"></i>
+                                <p class="text-xs mt-1">PayPal</p>
+                            </button>
+                            <button type="button" class="p-4 rounded-lg border-2 border-gray-300 hover:border-indigo-500 focus:border-indigo-500 transition-colors">
+                                <i data-lucide="wallet" class="h-6 w-6 mx-auto"></i>
+                                <p class="text-xs mt-1">USDC Wallet</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="email" class="text-sm font-medium">Email de Facturación</label>
+                        <input id="email" type="email" placeholder="tu@email.com" required class="mt-2 flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="btn-primary w-full rounded-full py-4 text-lg font-semibold shadow-lg">Pagar Ahora</button>
+                </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA DE AUTENTICACIÓN (LOGIN) -->
+        <div id="login-page" class="page">
+            <div class="flex items-center justify-center min-h-screen gradient-bg p-4">
+                <div class="w-full max-w-sm p-8 rounded-2xl bg-white shadow-2xl">
+                    <button onclick="navigateTo('landing-page')" class="mb-4 text-sm text-gray-600 hover:text-gray-800 flex items-center">
+                        <i data-lucide="arrow-left" class="mr-2 h-4 w-4"></i> Volver al inicio
+                    </button>
+                    <div class="text-center">
+                    <span class="font-bold text-3xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">IAWorks</span>
+                    <h1 class="mt-6 text-2xl font-bold text-gray-900">Bienvenido de nuevo</h1>
+                    <p class="mt-2 text-gray-600">Introduce tu correo para acceder a tu cuenta.</p>
+                </div>
+                <form onsubmit="handleLogin(event)" class="mt-8 space-y-6">
+                    <div>
+                        <input id="login-email" type="email" placeholder="m@ejemplo.com" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <div>
+                        <input id="login-password" type="password" placeholder="Tu contraseña" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="btn-primary w-full rounded-full py-3 font-semibold shadow-lg">Iniciar Sesión</button>
+                </form>
+                <div class="mt-6 text-center text-sm">
+                    <p class="text-gray-600">¿No tienes cuenta? <a href="#" onclick="navigateTo('register-page')" class="font-medium text-indigo-600 hover:text-indigo-500">Regístrate aquí</a></p>
+                </div>
+                <div class="mt-4 text-center text-sm">
+                    <a href="#" onclick="navigateTo('admin-login-page')" class="font-medium text-indigo-600 hover:text-indigo-500">¿Eres administrador? Entra aquí</a>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA DE REGISTRO -->
+        <div id="register-page" class="page">
+            <div class="flex items-center justify-center min-h-screen gradient-bg p-4">
+                <div class="w-full max-w-sm p-8 rounded-2xl bg-white shadow-2xl">
+                    <button onclick="navigateTo('landing-page')" class="mb-4 text-sm text-gray-600 hover:text-gray-800 flex items-center">
+                        <i data-lucide="arrow-left" class="mr-2 h-4 w-4"></i> Volver al inicio
+                    </button>
+                    <div class="text-center">
+                    <span class="font-bold text-3xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">IAWorks</span>
+                    <h1 class="mt-6 text-2xl font-bold text-gray-900">Crear una cuenta</h1>
+                    <p class="mt-2 text-gray-600">Completa el formulario para registrarte.</p>
+                </div>
+                <form onsubmit="handleRegister(event)" class="mt-8 space-y-6">
+                    <div>
+                        <input id="register-name" type="text" placeholder="Nombre completo" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <div>
+                        <input id="register-email" type="email" placeholder="m@ejemplo.com" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <div>
+                        <input id="register-password" type="password" placeholder="Crear contraseña" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <div>
+                        <input id="register-password-confirm" type="password" placeholder="Confirmar contraseña" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="btn-primary w-full rounded-full py-3 font-semibold shadow-lg">Registrarse</button>
+                </form>
+                <div class="mt-6 text-center text-sm">
+                    <p class="text-gray-600">¿Ya tienes cuenta? <a href="#" onclick="navigateTo('login-page')" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a></p>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA DE LOGIN DE ADMINISTRADOR -->
+        <div id="admin-login-page" class="page">
+            <div class="flex items-center justify-center min-h-screen gradient-bg p-4">
+                <div class="w-full max-w-sm p-8 rounded-2xl bg-white shadow-2xl">
+                    <button onclick="navigateTo('landing-page')" class="mb-4 text-sm text-gray-600 hover:text-gray-800 flex items-center">
+                        <i data-lucide="arrow-left" class="mr-2 h-4 w-4"></i> Volver al inicio
+                    </button>
+                    <div class="text-center">
+                    <i data-lucide="shield-check" class="h-12 w-12 mx-auto text-indigo-600"></i>
+                    <h1 class="mt-6 text-2xl font-bold text-gray-900">Panel de Administración</h1>
+                    <p class="mt-2 text-gray-600">Introduce tus credenciales para acceder.</p>
+                </div>
+                <form onsubmit="handleAdminLogin(event)" class="mt-8 space-y-6">
+                    <div>
+                        <input id="admin-username" type="text" placeholder="Usuario" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <div>
+                        <input id="admin-password" type="password" placeholder="Contraseña" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="btn-primary w-full rounded-full py-3 font-semibold shadow-lg">Iniciar Sesión</button>
+                </form>
+                 <div class="mt-6 text-center text-sm">
+                    <a href="#" onclick="navigateTo('login-page')" class="font-medium text-indigo-600 hover:text-indigo-500">Volver a login de usuario</a>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA DE DASHBOARD USUARIO -->
+        <div id="dashboard-page" class="page">
+            <div class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+                <div class="hidden border-r bg-gray-100 md:block">
+                    <div class="flex h-full max-h-screen flex-col gap-2">
+                        <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                            <a href="#" class="flex items-center gap-2 font-semibold">
+                                <span class="font-bold text-xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">IAWorks</span>
+                            </a>
+                        </div>
+                        <div class="flex-1">
+                            <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
+                                <a href="#" onclick="showDashboardSubpage('dashboard-home')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
+                                    <i data-lucide="home" class="h-4 w-4"></i> Inicio
+                                </a>
+                                <a href="#" onclick="showDashboardSubpage('dashboard-tools')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
+                                    <i data-lucide="wrench" class="h-4 w-4"></i> Herramientas
+                                </a>
+                                <a href="#" onclick="showDashboardSubpage('dashboard-calendar')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
+                                    <i data-lucide="calendar" class="h-4 w-4"></i> Calendario
+                                </a>
+                                <a href="#" onclick="showDashboardSubpage('dashboard-profile')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
+                                    <i data-lucide="user" class="h-4 w-4"></i> Perfil
+                                </a>
+                                <a href="#" onclick="showDashboardSubpage('dashboard-subscription')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
+                                    <i data-lucide="credit-card" class="h-4 w-4"></i> Suscripción
+                                </a>
+                            </nav>
+                        </div>
+                        <div class="mt-auto p-4">
+                            <button onclick="handleLogout()" class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition-all hover:bg-gray-200 hover:text-red-600 w-full">
+                                <i data-lucide="log-out" class="h-4 w-4"></i> Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <header class="flex h-14 items-center gap-4 border-b bg-white px-4 lg:h-[60px] lg:px-6">
+                        <div class="w-full flex-1">
+                            <h1 class="text-lg font-semibold md:text-2xl">Dashboard</h1>
+                        </div>
+                        <button><i data-lucide="bell" class="h-5 w-5"></i></button>
+                    </header>
+                    <main class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+                        <!-- Sub-páginas del Dashboard -->
+                        <div id="dashboard-home" class="dashboard-subpage active">
+                            <div class="flex flex-col gap-6">
+                                <div>
+                                    <h1 class="text-3xl font-bold tracking-tight">Resumen</h1>
+                                    <p class="text-gray-600">Aquí tienes un resumen de tu actividad.</p>
+                                </div>
+                                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                                    <div class="card-hover rounded-xl border bg-white p-6 shadow-md">
+                                        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+                                            <h3 class="text-sm font-medium text-gray-600">Leads Totales</h3>
+                                            <i data-lucide="users" class="h-4 w-4 text-gray-400"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl font-bold">2,350</div>
+                                            <p class="text-xs text-green-600 flex items-center gap-1">
+                                                <i data-lucide="trending-up" class="h-3 w-3"></i> +20% desde el mes pasado
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="card-hover rounded-xl border bg-white p-6 shadow-md">
+                                        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+                                            <h3 class="text-sm font-medium text-gray-600">Emails Enviados</h3>
+                                            <i data-lucide="mail" class="h-4 w-4 text-gray-400"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl font-bold">12,234</div>
+                                            <p class="text-xs text-green-600 flex items-center gap-1">
+                                                <i data-lucide="trending-up" class="h-3 w-3"></i> +19% desde el mes pasado
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="card-hover rounded-xl border bg-white p-6 shadow-md">
+                                        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+                                            <h3 class="text-sm font-medium text-gray-600">Mensajes IG</h3>
+                                            <i data-lucide="send" class="h-4 w-4 text-gray-400"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl font-bold">573</div>
+                                            <p class="text-xs text-green-600 flex items-center gap-1">
+                                                <i data-lucide="trending-up" class="h-3 w-3"></i> +201 desde el mes pasado
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="card-hover rounded-xl border bg-white p-6 shadow-md">
+                                        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+                                            <h3 class="text-sm font-medium text-gray-600">Llamadas Agendadas</h3>
+                                            <i data-lucide="calendar" class="h-4 w-4 text-gray-400"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl font-bold">89</div>
+                                            <p class="text-xs text-green-600 flex items-center gap-1">
+                                                <i data-lucide="trending-up" class="h-3 w-3"></i> +15 desde el mes pasado
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-xl border bg-white p-6 shadow-md">
+                                    <h3 class="text-lg font-semibold">Resumen de Leads</h3>
+                                    <canvas id="leadsChart" class="mt-4"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="dashboard-tools" class="dashboard-subpage"><h1 class="text-3xl font-bold">Herramientas</h1><p class="text-gray-600">Selecciona una herramienta para empezar.</p></div>
+                        <div id="dashboard-calendar" class="dashboard-subpage"><h1 class="text-3xl font-bold">Calendario</h1><p class="text-gray-600">Aquí verás tus llamadas agendadas.</p></div>
+                        <div id="dashboard-profile" class="dashboard-subpage"><h1 class="text-3xl font-bold">Perfil</h1><p class="text-gray-600">Gestiona la información de tu cuenta.</p></div>
+                        <div id="dashboard-subscription" class="dashboard-subpage"><h1 class="text-3xl font-bold">Suscripción</h1><p class="text-gray-600">Gestiona tu plan y método de pago.</p></div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Externo -->
+    <script src="script.js"></script>
+</body>
+</html>
