@@ -1,0 +1,30 @@
+# Archivos y carpetas a ignorar
+
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Base de datos local
+*.db
+data/

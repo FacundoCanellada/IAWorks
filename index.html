@@ -34,9 +34,13 @@
                         <a href="#services" class="text-gray-600 hover:text-indigo-600 transition-colors">Servicios</a>
                         <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition-colors">Precios</a>
                     </nav>
-                    <div class="flex items-center space-x-4">
+                    <div id="header-buttons" class="flex items-center space-x-4">
                         <button onclick="navigateTo('login-page')" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Iniciar Sesión</button>
                         <button onclick="navigateTo('register-page')" class="btn-primary rounded-full px-6 py-2 font-semibold shadow-lg">Registrarse</button>
+                    </div>
+                    <div id="header-user" class="hidden items-center space-x-4">
+                        <span class="text-sm font-medium text-gray-700">Hola, <span id="user-name-header"></span></span>
+                        <button onclick="handleLogout()" class="text-sm font-medium text-red-600 hover:text-red-700">Cerrar Sesión</button>
                     </div>
                 </div>
             </header>
@@ -216,9 +220,6 @@
                 <div class="mt-6 text-center text-sm">
                     <p class="text-gray-600">¿No tienes cuenta? <a href="#" onclick="navigateTo('register-page')" class="font-medium text-indigo-600 hover:text-indigo-500">Regístrate aquí</a></p>
                 </div>
-                <div class="mt-4 text-center text-sm">
-                    <a href="#" onclick="navigateTo('admin-login-page')" class="font-medium text-indigo-600 hover:text-indigo-500">¿Eres administrador? Entra aquí</a>
-                </div>
                 </div>
             </div>
         </div>
@@ -252,34 +253,6 @@
                 </form>
                 <div class="mt-6 text-center text-sm">
                     <p class="text-gray-600">¿Ya tienes cuenta? <a href="#" onclick="navigateTo('login-page')" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a></p>
-                </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PÁGINA DE LOGIN DE ADMINISTRADOR -->
-        <div id="admin-login-page" class="page">
-            <div class="flex items-center justify-center min-h-screen gradient-bg p-4">
-                <div class="w-full max-w-sm p-8 rounded-2xl bg-white shadow-2xl">
-                    <button onclick="navigateTo('landing-page')" class="mb-4 text-sm text-gray-600 hover:text-gray-800 flex items-center">
-                        <i data-lucide="arrow-left" class="mr-2 h-4 w-4"></i> Volver al inicio
-                    </button>
-                    <div class="text-center">
-                    <i data-lucide="shield-check" class="h-12 w-12 mx-auto text-indigo-600"></i>
-                    <h1 class="mt-6 text-2xl font-bold text-gray-900">Panel de Administración</h1>
-                    <p class="mt-2 text-gray-600">Introduce tus credenciales para acceder.</p>
-                </div>
-                <form onsubmit="handleAdminLogin(event)" class="mt-8 space-y-6">
-                    <div>
-                        <input id="admin-username" type="text" placeholder="Usuario" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
-                    </div>
-                    <div>
-                        <input id="admin-password" type="password" placeholder="Contraseña" required class="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
-                    </div>
-                    <button type="submit" class="btn-primary w-full rounded-full py-3 font-semibold shadow-lg">Iniciar Sesión</button>
-                </form>
-                 <div class="mt-6 text-center text-sm">
-                    <a href="#" onclick="navigateTo('login-page')" class="font-medium text-indigo-600 hover:text-indigo-500">Volver a login de usuario</a>
                 </div>
                 </div>
             </div>
@@ -402,6 +375,9 @@
         </div>
     </div>
 
+    <!-- API Client - DEBE CARGARSE PRIMERO -->
+    <script src="api.js"></script>
+    
     <!-- JavaScript Externo -->
     <script src="script.js"></script>
 </body>
