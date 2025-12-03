@@ -37,6 +37,50 @@ const userSchema = new mongoose.Schema({
   planEndDate: {
     type: Date
   },
+  planStatus: {
+    type: String,
+    enum: ['active', 'expired', 'cancelled', 'none'],
+    default: 'none'
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['stripe', 'paypal', 'none'],
+    default: 'none'
+  },
+  stripeCustomerId: {
+    type: String
+  },
+  stripeSubscriptionId: {
+    type: String
+  },
+  paypalSubscriptionId: {
+    type: String
+  },
+  paymentConfig: {
+    paypal: {
+      businessEmail: String,
+      configured: {
+        type: Boolean,
+        default: false
+      }
+    },
+    crypto: {
+      usdcWallet: String,
+      configured: {
+        type: Boolean,
+        default: false
+      }
+    },
+    bankTransfer: {
+      bankName: String,
+      iban: String,
+      accountHolder: String,
+      configured: {
+        type: Boolean,
+        default: false
+      }
+    }
+  },
   smtpConfig: {
     host: String,
     port: Number,

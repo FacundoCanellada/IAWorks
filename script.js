@@ -80,14 +80,13 @@ async function handleLogin(event) {
             // Actualizar header
             updateHeaderUI();
             
-            // Solo admin va al dashboard
+            // Admin va al panel de administración
             if (response.data.role === 'admin') {
-                console.log('Navegando a dashboard-page...');
-                navigateTo('dashboard-page');
+                console.log('Navegando a admin-page...');
+                navigateTo('admin-page');
                 setTimeout(() => {
-                    console.log('Mostrando dashboard-home...');
-                    showDashboardSubpage('dashboard-home');
-                    loadUserDashboard();
+                    console.log('Mostrando admin-home...');
+                    showAdminSubpage('admin-home');
                 }, 100);
             } else {
                 // Usuarios normales vuelven a la landing
@@ -169,41 +168,204 @@ function updateHeaderUI() {
     }
 }
 
-// --- Lógica de Checkout (Simulada) ---
-async function handleCheckout(event) {
-    event.preventDefault();
-    const submitBtn = event.target.querySelector('button[type="submit"]');
+// --- Lógica de Checkout y Pagos ---
+let currentPaymentData = null;
+let selectedPaymentMethod = null;
+
+function selectPaymentMethod(method) {
+    selectedPaymentMethod = method;
+    
+    // Actualizar estilos de botones
+    document.querySelectorAll('.payment-method-btn').forEach(btn => {
+        btn.classList.remove('border-indigo-500', 'bg-indigo-50');
+        btn.classList.add('border-gray-300');
+    });
+    
+    const selectedBtn = document.getElementById(`btn-${method}`);
+    selectedBtn.classList.remove('border-gray-300');
+    selectedBtn.classList.add('border-indigo-500', 'bg-indigo-50');
+    
+    // Mostrar botón de pago
+    document.getElementById('pay-button').classList.remove('hidden');
+    
+    lucide.createIcons();
+}
+
+async function processPayment() {
+    if (!selectedPaymentMethod) {
+        UIHelpers.showError('Selecciona un método de pago');
+        return;
+    }
+    
+    if (!appState.user || !appState.user.token) {
+        UIHelpers.showError('Debes iniciar sesión para continuar');
+        navigateTo('login-page');
+        return;
+    }
+    
+    const payButton = document.getElementById('pay-button');
     
     try {
-        UIHelpers.showLoading(submitBtn);
+        UIHelpers.showLoading(payButton);
         
-        const email = document.getElementById('email').value;
+        // Crear intención de pago
+        const plan = appState.selectedPlan.name.toLowerCase();
+        const response = await PaymentAPI.createIntent(plan, selectedPaymentMethod);
         
-        if (!email || !appState.selectedPlan.name) {
-            UIHelpers.showError('Por favor completa todos los campos');
-            UIHelpers.hideLoading(submitBtn);
-            return;
-        }
-        
-        // Simulación de pago exitoso
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        UIHelpers.showSuccess(`¡Pago exitoso para el plan ${appState.selectedPlan.name}!`);
-        
-        // Si el usuario está logueado, redirigir al dashboard
-        if (appState.user) {
-            navigateTo('dashboard-page');
-            setTimeout(() => {
-                showDashboardSubpage('dashboard-home');
-            }, 100);
-        } else {
-            // Si no está logueado, redirigir al registro
-            navigateTo('register-page');
+        if (response.success) {
+            currentPaymentData = response.data;
+            
+            // Mostrar detalles según método de pago
+            showPaymentDetails(selectedPaymentMethod, response.data);
         }
     } catch (error) {
-        UIHelpers.showError('Error al procesar el pago');
+        UIHelpers.showError(error.message || 'Error al procesar pago');
     } finally {
-        UIHelpers.hideLoading(submitBtn);
+        UIHelpers.hideLoading(payButton);
+    }
+}
+
+function showPaymentDetails(method, data) {
+    const detailsDiv = document.getElementById('payment-details');
+    detailsDiv.classList.remove('hidden');
+    
+    if (method === 'paypal') {
+        detailsDiv.innerHTML = `
+            <div class="p-6 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="font-bold text-lg mb-4">Pago con PayPal</h3>
+                <p class="text-sm text-gray-700 mb-4">Serás redirigido a PayPal para completar el pago de <strong>${appState.selectedPlan.price}€</strong></p>
+                <p class="text-sm text-gray-600 mb-4">Email del negocio: <strong>${data.paypalEmail}</strong></p>
+                <button onclick="redirectToPayPal()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
+                    Pagar con PayPal
+                </button>
+            </div>
+        `;
+    } else if (method === 'usdc') {
+        detailsDiv.innerHTML = `
+            <div class="p-6 bg-green-50 rounded-lg border border-green-200">
+                <h3 class="font-bold text-lg mb-4">Pago con USDC</h3>
+                <p class="text-sm text-gray-700 mb-2">Envía <strong>${data.amount} USDC</strong> a la siguiente wallet:</p>
+                <div class="mt-3 p-3 bg-white rounded border break-all">
+                    <code class="text-xs">${data.usdcWallet}</code>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium mb-2">Hash de la transacción:</label>
+                    <input id="crypto-tx-hash" type="text" placeholder="0x..." class="w-full p-2 border rounded">
+                </div>
+                <div class="mt-3">
+                    <label class="block text-sm font-medium mb-2">Tu dirección (desde):</label>
+                    <input id="crypto-from-address" type="text" placeholder="0x..." class="w-full p-2 border rounded">
+                </div>
+                <button onclick="confirmCryptoPayment()" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 mt-4">
+                    Confirmar Pago
+                </button>
+            </div>
+        `;
+    } else if (method === 'bank_transfer') {
+        detailsDiv.innerHTML = `
+            <div class="p-6 bg-purple-50 rounded-lg border border-purple-200">
+                <h3 class="font-bold text-lg mb-4">Transferencia Bancaria</h3>
+                <p class="text-sm text-gray-700 mb-4">Realiza una transferencia de <strong>${appState.selectedPlan.price}€</strong> a la siguiente cuenta:</p>
+                <div class="space-y-2 text-sm mb-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Banco:</span>
+                        <span class="font-medium">${data.bankInfo.bankName}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">IBAN:</span>
+                        <span class="font-medium">${data.bankInfo.iban}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Titular:</span>
+                        <span class="font-medium">${data.bankInfo.accountHolder}</span>
+                    </div>
+                </div>
+                <div class="p-3 bg-yellow-100 border border-yellow-300 rounded mb-4">
+                    <p class="text-sm font-bold text-yellow-800">⚠️ IMPORTANTE: Usa esta referencia</p>
+                    <p class="text-lg font-mono font-bold text-center mt-2">${data.bankInfo.reference}</p>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium mb-2">URL del comprobante (opcional):</label>
+                    <input id="bank-proof-url" type="url" placeholder="https://..." class="w-full p-2 border rounded">
+                </div>
+                <button onclick="confirmBankTransfer()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 mt-4">
+                    Confirmar que he realizado la transferencia
+                </button>
+            </div>
+        `;
+    }
+}
+
+function redirectToPayPal() {
+    // TODO: Integrar con PayPal SDK o generar link de pago
+    const paypalEmail = currentPaymentData.paypalEmail;
+    const amount = appState.selectedPlan.price;
+    const description = `IAWorks - Plan ${appState.selectedPlan.name}`;
+    
+    // Por ahora, simular pago exitoso
+    UIHelpers.showSuccess('Redirigiendo a PayPal...');
+    setTimeout(async () => {
+        try {
+            // Simular confirmación de PayPal
+            const orderId = 'PAYPAL_' + Date.now();
+            const payerId = 'PAYER_' + Math.random().toString(36).substr(2, 9);
+            
+            const response = await PaymentAPI.confirmPayPal(
+                currentPaymentData.paymentId,
+                orderId,
+                payerId
+            );
+            
+            if (response.success) {
+                UIHelpers.showSuccess('¡Pago completado! Tu suscripción está activa.');
+                setTimeout(() => navigateTo('landing-page'), 2000);
+            }
+        } catch (error) {
+            UIHelpers.showError(error.message);
+        }
+    }, 1500);
+}
+
+async function confirmCryptoPayment() {
+    const txHash = document.getElementById('crypto-tx-hash').value;
+    const fromAddress = document.getElementById('crypto-from-address').value;
+    
+    if (!txHash || !fromAddress) {
+        UIHelpers.showError('Por favor completa todos los campos');
+        return;
+    }
+    
+    try {
+        const response = await PaymentAPI.confirmCrypto(
+            currentPaymentData.paymentId,
+            txHash,
+            fromAddress
+        );
+        
+        if (response.success) {
+            UIHelpers.showSuccess('Transacción registrada. Verificando en blockchain...');
+            setTimeout(() => navigateTo('landing-page'), 2000);
+        }
+    } catch (error) {
+        UIHelpers.showError(error.message);
+    }
+}
+
+async function confirmBankTransfer() {
+    const proofUrl = document.getElementById('bank-proof-url').value;
+    
+    try {
+        const response = await PaymentAPI.confirmBankTransfer(
+            currentPaymentData.paymentId,
+            proofUrl || ''
+        );
+        
+        if (response.success) {
+            UIHelpers.showSuccess('Transferencia registrada. El administrador verificará tu pago.');
+            setTimeout(() => navigateTo('landing-page'), 2000);
+        }
+    } catch (error) {
+        UIHelpers.showError(error.message);
     }
 }
 
@@ -274,12 +436,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Verificar si hay usuario logueado
     if (appState.user && appState.user.token) {
-        // Solo admin va al dashboard automáticamente
+        // Admin va al panel de administración automáticamente
         if (appState.user.role === 'admin') {
-            navigateTo('dashboard-page');
+            navigateTo('admin-page');
             setTimeout(() => {
-                showDashboardSubpage('dashboard-home');
-                loadUserDashboard();
+                showAdminSubpage('admin-home');
             }, 100);
         }
         // Usuarios normales quedan en landing page
@@ -530,3 +691,358 @@ function initChart() {
         }
     });
 }
+
+// ========== FUNCIONES DE ADMIN ==========
+
+function showAdminSubpage(subpageId) {
+    document.querySelectorAll('.dashboard-subpage').forEach(p => p.classList.remove('active'));
+    const targetSubpage = document.getElementById(subpageId);
+    if (targetSubpage) {
+        targetSubpage.classList.add('active');
+        
+        // Cargar datos según la subpágina
+        setTimeout(() => {
+            lucide.createIcons();
+            if (subpageId === 'admin-home') loadAdminStats();
+            if (subpageId === 'admin-users') loadUsers();
+            if (subpageId === 'admin-coupons') loadCoupons();
+            if (subpageId === 'admin-payments') loadPaymentConfig();
+            if (subpageId === 'admin-logs') loadLogs();
+        }, 50);
+    }
+}
+
+async function loadAdminStats() {
+    try {
+        const response = await AdminAPI.getDashboardStats();
+        if (response.success) {
+            const stats = response.data;
+            
+            // Actualizar estadísticas principales
+            document.getElementById('admin-stat-users').textContent = stats.totalUsers || 0;
+            document.getElementById('admin-stat-revenue').textContent = `${stats.totalRevenue || 0}€`;
+            document.getElementById('admin-stat-active-subs').textContent = stats.activeSubs || 0;
+            document.getElementById('admin-stat-pending').textContent = stats.pendingPayments || 0;
+            
+            // Usuarios por plan
+            const usersByPlanDiv = document.getElementById('admin-users-by-plan');
+            if (stats.usersByPlan && stats.usersByPlan.length > 0) {
+                usersByPlanDiv.innerHTML = stats.usersByPlan.map(item => `
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span class="font-medium capitalize">${item._id || 'Sin plan'}</span>
+                        <span class="text-2xl font-bold text-indigo-600">${item.count}</span>
+                    </div>
+                `).join('');
+            } else {
+                usersByPlanDiv.innerHTML = '<p class="text-gray-500 text-sm">No hay datos disponibles</p>';
+            }
+            
+            // Pagos recientes
+            const recentPaymentsDiv = document.getElementById('admin-recent-payments');
+            if (stats.recentPayments && stats.recentPayments.length > 0) {
+                recentPaymentsDiv.innerHTML = stats.recentPayments.map(payment => `
+                    <div class="flex justify-between items-center p-3 border-b">
+                        <div>
+                            <p class="font-medium">${payment.user?.name || 'Usuario'}</p>
+                            <p class="text-sm text-gray-500">${new Date(payment.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <span class="font-bold text-green-600">${payment.amount}€</span>
+                    </div>
+                `).join('');
+            } else {
+                recentPaymentsDiv.innerHTML = '<p class="text-gray-500 text-sm">No hay pagos recientes</p>';
+            }
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al cargar estadísticas: ' + error.message);
+    }
+}
+
+async function loadUsers() {
+    try {
+        const response = await AdminAPI.getAllUsers();
+        if (response.success) {
+            const tbody = document.getElementById('users-table-body');
+            const users = response.data;
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No hay usuarios</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${user.name}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${user.email}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                            user.plan === 'Golden' ? 'bg-yellow-100 text-yellow-800' :
+                            user.plan === 'Premium' ? 'bg-purple-100 text-purple-800' :
+                            user.plan === 'Casual' ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-800'
+                        }">${user.plan || 'Sin plan'}</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                            user.planStatus === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }">${user.planStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm">
+                        <div class="flex gap-2">
+                            <button onclick="toggleUserStatus('${user._id}')" class="text-indigo-600 hover:text-indigo-800">
+                                ${user.planStatus === 'active' ? 'Suspender' : 'Activar'}
+                            </button>
+                            <button onclick="showChangeUserPlanModal('${user._id}', '${user.plan}')" class="text-green-600 hover:text-green-800">
+                                Cambiar Plan
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al cargar usuarios: ' + error.message);
+    }
+}
+
+async function toggleUserStatus(userId) {
+    if (!confirm('¿Estás seguro de cambiar el estado de este usuario?')) return;
+    
+    try {
+        const response = await AdminAPI.toggleUserStatus(userId);
+        if (response.success) {
+            UIHelpers.showSuccess('Estado actualizado correctamente');
+            loadUsers();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al cambiar estado: ' + error.message);
+    }
+}
+
+function showChangeUserPlanModal(userId, currentPlan) {
+    const newPlan = prompt(`Plan actual: ${currentPlan}\n\nIntroduce el nuevo plan (Casual/Premium/Golden):`, currentPlan);
+    if (!newPlan) return;
+    
+    const validPlans = ['Casual', 'Premium', 'Golden'];
+    if (!validPlans.includes(newPlan)) {
+        UIHelpers.showError('Plan inválido. Usa: Casual, Premium o Golden');
+        return;
+    }
+    
+    changeUserPlan(userId, newPlan);
+}
+
+async function changeUserPlan(userId, newPlan) {
+    try {
+        const response = await AdminAPI.changeUserPlan(userId, newPlan);
+        if (response.success) {
+            UIHelpers.showSuccess('Plan actualizado correctamente');
+            loadUsers();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al cambiar plan: ' + error.message);
+    }
+}
+
+async function loadCoupons() {
+    try {
+        const response = await AdminAPI.getAllCoupons();
+        if (response.success) {
+            const grid = document.getElementById('coupons-grid');
+            const coupons = response.data;
+            
+            if (coupons.length === 0) {
+                grid.innerHTML = '<div class="col-span-3 rounded-xl border bg-white p-6 shadow-md text-center text-gray-500">No hay cupones creados</div>';
+                return;
+            }
+            
+            grid.innerHTML = coupons.map(coupon => {
+                const isExpired = new Date(coupon.expiryDate) < new Date();
+                const isMaxed = coupon.maxUses && coupon.usedCount >= coupon.maxUses;
+                const isInactive = !coupon.active || isExpired || isMaxed;
+                
+                return `
+                    <div class="card-hover rounded-xl border bg-white p-6 shadow-md ${isInactive ? 'opacity-60' : ''}">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-indigo-600">${coupon.code}</h3>
+                                <p class="text-2xl font-bold text-gray-900 mt-1">${coupon.discountPercentage}% OFF</p>
+                            </div>
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                                isInactive ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                            }">${isInactive ? 'Inactivo' : 'Activo'}</span>
+                        </div>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p>Expira: ${new Date(coupon.expiryDate).toLocaleDateString()}</p>
+                            <p>Usos: ${coupon.usedCount}${coupon.maxUses ? `/${coupon.maxUses}` : ' (ilimitado)'}</p>
+                        </div>
+                        <button onclick="deleteCoupon('${coupon._id}')" class="mt-4 w-full text-sm text-red-600 hover:text-red-800 font-medium">
+                            Eliminar
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al cargar cupones: ' + error.message);
+    }
+}
+
+function showCreateCouponModal() {
+    document.getElementById('coupon-modal').classList.remove('hidden');
+    lucide.createIcons();
+}
+
+function hideCouponModal() {
+    document.getElementById('coupon-modal').classList.add('hidden');
+    document.getElementById('coupon-code').value = '';
+    document.getElementById('coupon-discount').value = '';
+    document.getElementById('coupon-expiry').value = '';
+    document.getElementById('coupon-max-uses').value = '';
+}
+
+async function createCoupon(event) {
+    event.preventDefault();
+    
+    const code = document.getElementById('coupon-code').value.toUpperCase();
+    const discountPercentage = parseInt(document.getElementById('coupon-discount').value);
+    const expiryDate = document.getElementById('coupon-expiry').value;
+    const maxUses = document.getElementById('coupon-max-uses').value;
+    
+    const couponData = {
+        code,
+        discountPercentage,
+        expiryDate,
+        maxUses: maxUses ? parseInt(maxUses) : undefined
+    };
+    
+    try {
+        const response = await AdminAPI.createCoupon(couponData);
+        if (response.success) {
+            UIHelpers.showSuccess('Cupón creado correctamente');
+            hideCouponModal();
+            loadCoupons();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al crear cupón: ' + error.message);
+    }
+}
+
+async function deleteCoupon(couponId) {
+    if (!confirm('¿Estás seguro de eliminar este cupón?')) return;
+    
+    try {
+        const response = await AdminAPI.deleteCoupon(couponId);
+        if (response.success) {
+            UIHelpers.showSuccess('Cupón eliminado correctamente');
+            loadCoupons();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al eliminar cupón: ' + error.message);
+    }
+}
+
+async function savePaymentConfig(event, method) {
+    event.preventDefault();
+    
+    let config = {};
+    
+    if (method === 'paypal') {
+        config.businessEmail = document.getElementById('paypal-email').value;
+    } else if (method === 'crypto') {
+        config.walletAddress = document.getElementById('usdc-wallet').value;
+        config.network = document.getElementById('usdc-network').value;
+    } else if (method === 'bank_transfer') {
+        config.iban = document.getElementById('bank-iban').value;
+        config.accountHolder = document.getElementById('bank-holder').value;
+        config.bankName = document.getElementById('bank-name').value;
+    }
+    
+    try {
+        const response = await PaymentAPI.updatePaymentConfig(method, config);
+        if (response.success) {
+            UIHelpers.showSuccess('Configuración de pago guardada correctamente');
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al guardar configuración: ' + error.message);
+    }
+}
+
+async function loadPaymentConfig() {
+    try {
+        // Obtener perfil del usuario admin para cargar su paymentConfig
+        const response = await AuthAPI.getProfile();
+        if (response.success && response.data.paymentConfig) {
+            const config = response.data.paymentConfig;
+            
+            // Cargar PayPal
+            if (config.paypal?.businessEmail) {
+                document.getElementById('paypal-email').value = config.paypal.businessEmail;
+            }
+            
+            // Cargar USDC
+            if (config.crypto?.walletAddress) {
+                document.getElementById('usdc-wallet').value = config.crypto.walletAddress;
+                document.getElementById('usdc-network').value = config.crypto.network || 'ethereum';
+            }
+            
+            // Cargar Bank Transfer
+            if (config.bankTransfer?.iban) {
+                document.getElementById('bank-iban').value = config.bankTransfer.iban;
+                document.getElementById('bank-holder').value = config.bankTransfer.accountHolder || '';
+                document.getElementById('bank-name').value = config.bankTransfer.bankName || '';
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar configuración de pagos:', error);
+    }
+}
+
+async function loadLogs() {
+    try {
+        const type = document.getElementById('log-type-filter').value;
+        const filters = type ? { type } : {};
+        
+        const response = await AdminAPI.getLogs(filters);
+        if (response.success) {
+            const tbody = document.getElementById('logs-table-body');
+            const logs = response.data;
+            
+            if (logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No hay logs</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = logs.map(log => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">${new Date(log.createdAt).toLocaleString()}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                            log.type === 'error' ? 'bg-red-100 text-red-800' :
+                            log.type === 'payment' ? 'bg-green-100 text-green-800' :
+                            'bg-blue-100 text-blue-800'
+                        }">${log.type}</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                            log.level === 'error' ? 'bg-red-100 text-red-800' :
+                            log.level === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800'
+                        }">${log.level}</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${log.message}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${log.user?.name || '-'}</td>
+                </tr>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al cargar logs: ' + error.message);
+    }
+}
+

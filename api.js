@@ -164,6 +164,126 @@ const AuthAPI = {
   }
 };
 
+// API de Suscripciones
+const SubscriptionAPI = {
+  // Obtener plan actual
+  async getCurrentPlan() {
+    return apiClient.get('/subscription/current');
+  },
+  
+  // Activar suscripción
+  async activateSubscription(data) {
+    return apiClient.post('/subscription/activate', data);
+  },
+  
+  // Cancelar suscripción
+  async cancelSubscription() {
+    return apiClient.post('/subscription/cancel');
+  },
+  
+  // Renovar suscripción
+  async renewSubscription() {
+    return apiClient.post('/subscription/renew');
+  },
+  
+  // Cambiar de plan
+  async changePlan(newPlan) {
+    return apiClient.put('/subscription/change', { newPlan });
+  }
+};
+
+// API de Pagos
+const PaymentAPI = {
+  // Crear intención de pago
+  async createIntent(plan, paymentMethod) {
+    return apiClient.post('/payment/create-intent', { plan, paymentMethod });
+  },
+  
+  // Confirmar pago PayPal
+  async confirmPayPal(paymentId, orderId, payerId) {
+    return apiClient.post('/payment/confirm-paypal', { paymentId, orderId, payerId });
+  },
+  
+  // Confirmar pago USDC
+  async confirmCrypto(paymentId, txHash, fromAddress) {
+    return apiClient.post('/payment/confirm-crypto', { paymentId, txHash, fromAddress });
+  },
+  
+  // Confirmar transferencia bancaria
+  async confirmBankTransfer(paymentId, proofUrl) {
+    return apiClient.post('/payment/confirm-bank', { paymentId, proofUrl });
+  },
+  
+  // [ADMIN] Obtener pagos pendientes
+  async getPendingPayments() {
+    return apiClient.get('/payment/pending');
+  },
+  
+  // [ADMIN] Aprobar pago
+  async approvePayment(paymentId) {
+    return apiClient.post('/payment/approve', { paymentId });
+  },
+  
+  // [ADMIN] Configurar método de pago
+  async updatePaymentConfig(paymentMethod, config) {
+    return apiClient.put('/payment/config', { paymentMethod, config });
+  }
+};
+
+// API de Admin
+const AdminAPI = {
+  // Obtener estadísticas del dashboard
+  async getDashboardStats() {
+    return apiClient.get('/admin/stats');
+  },
+  
+  // Obtener todos los usuarios
+  async getAllUsers() {
+    return apiClient.get('/admin/users');
+  },
+  
+  // Suspender/activar usuario
+  async toggleUserStatus(userId) {
+    return apiClient.post('/admin/users/toggle-status', { userId });
+  },
+  
+  // Cambiar plan de usuario
+  async changeUserPlan(userId, newPlan) {
+    return apiClient.put('/admin/users/change-plan', { userId, newPlan });
+  },
+  
+  // Resetear contraseña de usuario
+  async resetUserPassword(userId, newPassword) {
+    return apiClient.put('/admin/users/reset-password', { userId, newPassword });
+  },
+  
+  // Obtener cupones
+  async getAllCoupons() {
+    return apiClient.get('/admin/coupons');
+  },
+  
+  // Crear cupón
+  async createCoupon(couponData) {
+    return apiClient.post('/admin/coupons', couponData);
+  },
+  
+  // Actualizar cupón
+  async updateCoupon(couponId, couponData) {
+    return apiClient.put(`/admin/coupons/${couponId}`, couponData);
+  },
+  
+  // Eliminar cupón
+  async deleteCoupon(couponId) {
+    return apiClient.delete(`/admin/coupons/${couponId}`);
+  },
+  
+  // Obtener logs
+  async getLogs(filters = {}) {
+    const params = new URLSearchParams(filters);
+    return apiClient.get(`/admin/logs?${params}`);
+  }
+};
+
 // Utilidades de UI
 const UIHelpers = {
   showLoading(button) {
