@@ -706,6 +706,7 @@ function showAdminSubpage(subpageId) {
             if (subpageId === 'admin-home') loadAdminStats();
             if (subpageId === 'admin-users') loadUsers();
             if (subpageId === 'admin-coupons') loadCoupons();
+            if (subpageId === 'admin-pending-payments') loadPendingPayments();
             if (subpageId === 'admin-payments') loadPaymentConfig();
             if (subpageId === 'admin-logs') loadLogs();
         }, 50);
@@ -1043,6 +1044,118 @@ async function loadLogs() {
         }
     } catch (error) {
         UIHelpers.showError('Error al cargar logs: ' + error.message);
+    }
+}
+
+// Cargar pagos pendientes
+async function loadPendingPayments() {
+    try {
+        const response = await PaymentAPI.getPendingPayments();
+        if (response.success) {
+            const tbody = document.getElementById('pending-payments-table-body');
+            const payments = response.data;
+            
+            if (payments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">No hay pagos pendientes</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = payments.map(payment => {
+                let detalles = '';
+                
+                if (payment.paymentMethod === 'paypal') {
+                    detalles = `Order ID: ${payment.paypalOrderId || 'N/A'}`;
+                } else if (payment.paymentMethod === 'usdc') {
+                    detalles = `<div class="text-xs">
+                        <p><strong>TX Hash:</strong></p>
+                        <p class="truncate max-w-xs">${payment.cryptoTxHash || 'N/A'}</p>
+                        <p class="mt-1"><strong>Desde:</strong> ${payment.cryptoFromAddress ? payment.cryptoFromAddress.substring(0, 10) + '...' : 'N/A'}</p>
+                    </div>`;
+                } else if (payment.paymentMethod === 'bank_transfer') {
+                    detalles = `<div class="text-xs">
+                        <p><strong>Ref:</strong> ${payment.bankReference || 'N/A'}</p>
+                        ${payment.bankProof ? `<a href="${payment.bankProof}" target="_blank" class="text-indigo-600 hover:underline">Ver comprobante</a>` : '<p class="text-gray-400">Sin comprobante</p>'}
+                    </div>`;
+                }
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm">
+                            <div>
+                                <p class="font-medium text-gray-900">${payment.user?.name || 'Usuario'}</p>
+                                <p class="text-gray-500 text-xs">${payment.user?.email || ''}</p>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                                payment.plan === 'golden' ? 'bg-yellow-100 text-yellow-800' :
+                                payment.plan === 'premium' ? 'bg-purple-100 text-purple-800' :
+                                'bg-blue-100 text-blue-800'
+                            }">${payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1)}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-bold text-gray-900">${payment.amount}€</td>
+                        <td class="px-6 py-4 text-sm">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                                payment.paymentMethod === 'paypal' ? 'bg-blue-100 text-blue-800' :
+                                payment.paymentMethod === 'usdc' ? 'bg-green-100 text-green-800' :
+                                'bg-gray-100 text-gray-800'
+                            }">${
+                                payment.paymentMethod === 'paypal' ? 'PayPal' :
+                                payment.paymentMethod === 'usdc' ? 'USDC' :
+                                'Transferencia'
+                            }</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm">${detalles}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">${new Date(payment.createdAt).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 text-sm">
+                            <div class="flex gap-2">
+                                <button onclick="approvePayment('${payment._id}')" class="text-green-600 hover:text-green-800 font-medium">
+                                    Aprobar
+                                </button>
+                                <button onclick="rejectPayment('${payment._id}')" class="text-red-600 hover:text-red-800 font-medium">
+                                    Rechazar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al cargar pagos pendientes: ' + error.message);
+    }
+}
+
+// Aprobar pago
+async function approvePayment(paymentId) {
+    if (!confirm('¿Estás seguro de aprobar este pago? Se activará la suscripción del usuario.')) return;
+    
+    try {
+        const response = await PaymentAPI.approvePayment(paymentId);
+        if (response.success) {
+            UIHelpers.showSuccess('Pago aprobado y suscripción activada');
+            loadPendingPayments();
+            loadAdminStats(); // Actualizar estadísticas
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al aprobar pago: ' + error.message);
+    }
+}
+
+// Rechazar pago
+async function rejectPayment(paymentId) {
+    if (!confirm('¿Estás seguro de rechazar este pago?')) return;
+    
+    try {
+        const response = await PaymentAPI.rejectPayment(paymentId);
+        if (response.success) {
+            UIHelpers.showSuccess('Pago rechazado');
+            loadPendingPayments();
+        }
+    } catch (error) {
+        UIHelpers.showError('Error al rechazar pago: ' + error.message);
     }
 }
 

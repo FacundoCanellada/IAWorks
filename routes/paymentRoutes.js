@@ -6,6 +6,7 @@ import {
   confirmBankTransfer,
   getPendingPayments,
   approvePayment,
+  rejectPayment,
   updatePaymentConfig
 } from '../controllers/paymentController.js';
 import { protect, admin } from '../middleware/auth.js';
@@ -21,6 +22,7 @@ router.post('/confirm-bank', protect, confirmBankTransfer);
 // Rutas de admin (requieren autenticación + rol admin)
 router.get('/pending', protect, admin, getPendingPayments);
 router.post('/approve', protect, admin, approvePayment);
+router.post('/reject', protect, admin, rejectPayment);
 router.put('/config', protect, admin, updatePaymentConfig);
 
 export default router;

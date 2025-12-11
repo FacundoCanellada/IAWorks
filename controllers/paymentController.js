@@ -276,6 +276,37 @@ export const approvePayment = async (req, res) => {
   }
 };
 
+// [ADMIN] Rechazar pago
+export const rejectPayment = async (req, res) => {
+  try {
+    const { paymentId } = req.body;
+    
+    const payment = await Payment.findById(paymentId);
+    
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Pago no encontrado'
+      });
+    }
+    
+    payment.status = 'failed';
+    
+    await payment.save();
+    
+    res.json({
+      success: true,
+      message: 'Pago rechazado'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al rechazar pago',
+      error: error.message
+    });
+  }
+};
+
 // [ADMIN] Configurar métodos de pago
 export const updatePaymentConfig = async (req, res) => {
   try {

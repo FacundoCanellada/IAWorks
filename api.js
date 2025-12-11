@@ -224,6 +224,11 @@ const PaymentAPI = {
     return apiClient.post('/payment/approve', { paymentId });
   },
   
+  // [ADMIN] Rechazar pago
+  async rejectPayment(paymentId) {
+    return apiClient.post('/payment/reject', { paymentId });
+  },
+  
   // [ADMIN] Configurar método de pago
   async updatePaymentConfig(paymentMethod, config) {
     return apiClient.put('/payment/config', { paymentMethod, config });

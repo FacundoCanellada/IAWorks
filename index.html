@@ -407,6 +407,9 @@
                                 <a href="#" onclick="showAdminSubpage('admin-coupons')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
                                     <i data-lucide="ticket" class="h-4 w-4"></i> Cupones
                                 </a>
+                                <a href="#" onclick="showAdminSubpage('admin-pending-payments')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
+                                    <i data-lucide="clock" class="h-4 w-4"></i> Pagos Pendientes
+                                </a>
                                 <a href="#" onclick="showAdminSubpage('admin-payments')" class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-200 hover:translate-x-1">
                                     <i data-lucide="credit-card" class="h-4 w-4"></i> Configuración Pagos
                                 </a>
@@ -536,6 +539,43 @@
                                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" id="coupons-grid">
                                     <div class="rounded-xl border bg-white p-6 shadow-md text-center text-gray-500">
                                         Cargando cupones...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Pending Payments -->
+                        <div id="admin-pending-payments" class="dashboard-subpage">
+                            <div class="flex flex-col gap-6">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h1 class="text-3xl font-bold tracking-tight">Pagos Pendientes</h1>
+                                        <p class="text-gray-600">Aprueba o rechaza los pagos de los usuarios.</p>
+                                    </div>
+                                    <button onclick="loadPendingPayments()" class="btn-primary rounded-lg px-4 py-2 flex items-center gap-2">
+                                        <i data-lucide="refresh-cw" class="h-4 w-4"></i> Actualizar
+                                    </button>
+                                </div>
+                                <div class="rounded-xl border bg-white shadow-md overflow-hidden">
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full">
+                                            <thead class="bg-gray-50 border-b">
+                                                <tr>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Método</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Detalles</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="pending-payments-table-body" class="divide-y divide-gray-200">
+                                                <tr>
+                                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">Cargando pagos...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
