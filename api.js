@@ -1,5 +1,5 @@
 // Configuración de la API
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://iaworks-production.up.railway.app/api';
 
 // Almacenamiento del token
 const TokenService = {
