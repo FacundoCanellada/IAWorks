@@ -794,15 +794,15 @@ async function loadUsers() {
             const users = response.data;
             
             if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500 text-sm">No hay usuarios</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="px-2 md:px-4 py-4 text-center text-gray-500 text-sm">No hay usuarios</td></tr>';
                 return;
             }
             
             tbody.innerHTML = users.map(user => `
                 <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">${user.name}</td>
-                    <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">${user.email}</td>
-                    <td class="px-4 py-4 text-sm whitespace-nowrap">
+                    <td class="px-2 md:px-4 py-4 text-sm font-medium text-gray-900">${user.name}</td>
+                    <td class="px-2 md:px-4 py-4 text-sm text-gray-500">${user.email}</td>
+                    <td class="px-2 md:px-4 py-4 text-sm">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                             user.plan === 'Golden' ? 'bg-yellow-100 text-yellow-800' :
                             user.plan === 'Premium' ? 'bg-purple-100 text-purple-800' :
@@ -810,13 +810,13 @@ async function loadUsers() {
                             'bg-gray-100 text-gray-800'
                         }">${user.plan || 'Sin plan'}</span>
                     </td>
-                    <td class="px-4 py-4 text-sm whitespace-nowrap">
+                    <td class="px-2 md:px-4 py-4 text-sm">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                             user.planStatus === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }">${user.planStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
                     </td>
-                    <td class="px-4 py-4 text-sm whitespace-nowrap">
-                        <div class="flex gap-2">
+                    <td class="px-2 md:px-4 py-4 text-sm">
+                        <div class="flex gap-2 flex-wrap">
                             <button onclick="toggleUserStatus('${user._id}')" class="text-indigo-600 hover:text-indigo-800 text-xs">
                                 ${user.planStatus === 'active' ? 'Suspender' : 'Activar'}
                             </button>
@@ -1041,29 +1041,29 @@ async function loadLogs() {
             const logs = response.data;
             
             if (logs.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500 text-sm">No hay logs</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="px-2 md:px-4 py-4 text-center text-gray-500 text-sm">No hay logs</td></tr>';
                 return;
             }
             
             tbody.innerHTML = logs.map(log => `
                 <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${new Date(log.createdAt).toLocaleString()}</td>
-                    <td class="px-4 py-4 text-sm whitespace-nowrap">
+                    <td class="px-2 md:px-4 py-4 text-sm text-gray-900">${new Date(log.createdAt).toLocaleString()}</td>
+                    <td class="px-2 md:px-4 py-4 text-sm">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                             log.type === 'error' ? 'bg-red-100 text-red-800' :
                             log.type === 'payment' ? 'bg-green-100 text-green-800' :
                             'bg-blue-100 text-blue-800'
                         }">${log.type}</span>
                     </td>
-                    <td class="px-4 py-4 text-sm whitespace-nowrap">
+                    <td class="px-2 md:px-4 py-4 text-sm">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                             log.level === 'error' ? 'bg-red-100 text-red-800' :
                             log.level === 'warning' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-gray-100 text-gray-800'
                         }">${log.level}</span>
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-900">${log.message}</td>
-                    <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">${log.user?.name || '-'}</td>
+                    <td class="px-2 md:px-4 py-4 text-sm text-gray-900">${log.message}</td>
+                    <td class="px-2 md:px-4 py-4 text-sm text-gray-500">${log.user?.name || '-'}</td>
                 </tr>
             `).join('');
             
@@ -1083,7 +1083,7 @@ async function loadPendingPayments() {
             const payments = response.data;
             
             if (payments.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500 text-sm">No hay pagos pendientes</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="px-2 md:px-4 py-4 text-center text-gray-500 text-sm">No hay pagos pendientes</td></tr>';
                 return;
             }
             
@@ -1107,21 +1107,21 @@ async function loadPendingPayments() {
                 
                 return `
                     <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-4 text-sm whitespace-nowrap">
+                        <td class="px-2 md:px-4 py-4 text-sm">
                             <div>
                                 <p class="font-medium text-gray-900">${payment.user?.name || 'Usuario'}</p>
                                 <p class="text-gray-500 text-xs">${payment.user?.email || ''}</p>
                             </div>
                         </td>
-                        <td class="px-4 py-4 text-sm whitespace-nowrap">
+                        <td class="px-2 md:px-4 py-4 text-sm">
                             <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                                 payment.plan === 'golden' ? 'bg-yellow-100 text-yellow-800' :
                                 payment.plan === 'premium' ? 'bg-purple-100 text-purple-800' :
                                 'bg-blue-100 text-blue-800'
                             }">${payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1)}</span>
                         </td>
-                        <td class="px-4 py-4 text-sm font-bold text-gray-900 whitespace-nowrap">${payment.amount}€</td>
-                        <td class="px-4 py-4 text-sm whitespace-nowrap">
+                        <td class="px-2 md:px-4 py-4 text-sm font-bold text-gray-900">${payment.amount}€</td>
+                        <td class="px-2 md:px-4 py-4 text-sm">
                             <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                                 payment.paymentMethod === 'paypal' ? 'bg-blue-100 text-blue-800' :
                                 payment.paymentMethod === 'usdc' ? 'bg-green-100 text-green-800' :
@@ -1132,9 +1132,9 @@ async function loadPendingPayments() {
                                 'Transferencia'
                             }</span>
                         </td>
-                        <td class="px-4 py-4 text-sm">${detalles}</td>
-                        <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">${new Date(payment.createdAt).toLocaleDateString()}</td>
-                        <td class="px-4 py-4 text-sm whitespace-nowrap">
+                        <td class="px-2 md:px-4 py-4 text-sm">${detalles}</td>
+                        <td class="px-2 md:px-4 py-4 text-sm text-gray-500">${new Date(payment.createdAt).toLocaleDateString()}</td>
+                        <td class="px-2 md:px-4 py-4 text-sm">
                             <div class="flex gap-2">
                                 <button onclick="approvePayment('${payment._id}')" class="text-green-600 hover:text-green-800 font-medium text-xs">
                                     Aprobar
