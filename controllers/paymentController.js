@@ -109,21 +109,17 @@ export const confirmPayPalPayment = async (req, res) => {
     }
     
     // TODO: Verificar con API de PayPal que el pago se completó
-    // Por ahora, marcar como completado directamente
+    // Por ahora, marcar como pendiente para que el admin lo apruebe manualmente
     
-    payment.status = 'completed';
+    payment.status = 'pending';
     payment.paypalOrderId = orderId;
     payment.paypalPayerId = payerId;
-    payment.completedAt = new Date();
     
     await payment.save();
     
-    // Activar suscripción
-    await activateUserSubscription(req.user.id, payment.plan, 'paypal', orderId);
-    
     res.json({
       success: true,
-      message: 'Pago confirmado y suscripción activada'
+      message: 'Pago registrado. El administrador verificará tu pago.'
     });
   } catch (error) {
     res.status(500).json({

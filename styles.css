@@ -383,3 +383,211 @@ html {
         transform: translateY(0);
     }
 }
+
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE & TABLETS
+======================================== */
+
+/* Tablets y pantallas pequeñas (768px y menos) */
+@media (max-width: 768px) {
+    /* Header responsive */
+    header .container {
+        padding: 0 1rem;
+    }
+
+    /* Ocultar navegación en móviles */
+    header nav {
+        display: none;
+    }
+
+    /* Botones del header más pequeños */
+    #header-buttons button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    /* Hero section */
+    .hero h1, section h1 {
+        font-size: 1.875rem !important;
+        line-height: 2.25rem !important;
+    }
+
+    .hero p, section p {
+        font-size: 1rem !important;
+    }
+
+    /* Grid de servicios a 1 columna */
+    .grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+
+    /* Cards de planes más compactas */
+    .plan-card {
+        padding: 1.5rem;
+    }
+
+    .plan-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .plan-card .price {
+        font-size: 2rem;
+    }
+
+    /* Admin sidebar */
+    #admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    #admin-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    /* Tablas responsive - scroll horizontal */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table thead {
+        display: table-header-group;
+    }
+
+    table tbody {
+        display: table-row-group;
+    }
+
+    /* Stats cards en dashboard */
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Formularios más compactos */
+    form input, form select, form textarea {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+
+    /* Modal más pequeño */
+    .modal-content {
+        width: 95% !important;
+        margin: 1rem;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    /* Checkout page */
+    .checkout-container {
+        padding: 1rem;
+    }
+
+    .payment-method-card {
+        padding: 1rem;
+    }
+
+    /* Dashboard user */
+    .dashboard-container {
+        padding: 1rem;
+    }
+
+    /* Botones más grandes para touch */
+    button {
+        min-height: 44px;
+        padding: 0.75rem 1.5rem;
+    }
+
+    /* Espaciado entre secciones */
+    section {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+    /* Títulos aún más pequeños */
+    h1 {
+        font-size: 1.5rem !important;
+    }
+
+    h2 {
+        font-size: 1.25rem !important;
+    }
+
+    h3 {
+        font-size: 1.125rem !important;
+    }
+
+    /* Logo más pequeño */
+    header a span {
+        font-size: 1.5rem;
+    }
+
+    /* Botones a ancho completo */
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Admin sidebar más compacto */
+    #admin-sidebar a {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    /* Cards de dashboard */
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-card h3 {
+        font-size: 0.875rem;
+    }
+
+    .stat-card p {
+        font-size: 1.5rem;
+    }
+}
+
+/* Landscape móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    /* Reducir padding vertical en landscape */
+    section {
+        padding: 1rem;
+    }
+
+    .hero {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Tablets horizontales y pantallas medianas */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Grid de 2 columnas en tablets */
+    .grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Admin content ajustado */
+    #admin-sidebar {
+        width: 200px;
+    }
+
+    #admin-content {
+        margin-left: 200px;
+    }
+}
+
+/* Pantallas grandes (1440px+) */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+}
