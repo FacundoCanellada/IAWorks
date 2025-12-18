@@ -6,6 +6,10 @@
     <title>IAWorks - Automatiza tu Crecimiento</title>
     
     <!-- TailwindCSS Play CDN -->
+    <script>
+        // Suprimir advertencia de desarrollo
+        window.process = { env: { NODE_ENV: 'production' } };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Lucide Icons -->
@@ -447,8 +451,8 @@
                         <div id="admin-home" class="dashboard-subpage active">
                             <div class="flex flex-col gap-6">
                                 <div>
-                                    <h1 class="text-3xl font-bold tracking-tight">Dashboard Admin</h1>
-                                    <p class="text-gray-600">Estadísticas generales del sistema.</p>
+                                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Dashboard Admin</h1>
+                                    <p class="text-sm md:text-base text-gray-600">Estadísticas generales del sistema.</p>
                                 </div>
                                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                                     <div class="card-hover rounded-xl border bg-white p-6 shadow-md">
@@ -505,27 +509,27 @@
                         <!-- Admin Users -->
                         <div id="admin-users" class="dashboard-subpage">
                             <div class="flex flex-col gap-6">
-                                <div class="flex justify-between items-center">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                                     <div>
-                                        <h1 class="text-3xl font-bold tracking-tight">Gestión de Usuarios</h1>
-                                        <p class="text-gray-600">Administra todos los usuarios del sistema.</p>
+                                        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Gestión de Usuarios</h1>
+                                        <p class="text-sm md:text-base text-gray-600">Administra todos los usuarios del sistema.</p>
                                     </div>
                                 </div>
                                 <div class="rounded-xl border bg-white shadow-md overflow-hidden">
                                     <div class="overflow-x-auto">
-                                        <table class="w-full">
+                                        <table class="w-full min-w-[640px]">
                                             <thead class="bg-gray-50 border-b">
                                                 <tr>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Estado</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="users-table-body" class="divide-y divide-gray-200">
                                                 <tr>
-                                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">Cargando usuarios...</td>
+                                                    <td colspan="5" class="px-3 md:px-6 py-4 text-center text-gray-500 text-sm">Cargando usuarios...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -537,13 +541,13 @@
                         <!-- Admin Coupons -->
                         <div id="admin-coupons" class="dashboard-subpage">
                             <div class="flex flex-col gap-6">
-                                <div class="flex justify-between items-center">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                                     <div>
-                                        <h1 class="text-3xl font-bold tracking-tight">Gestión de Cupones</h1>
-                                        <p class="text-gray-600">Crea y administra códigos de descuento.</p>
+                                        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Gestión de Cupones</h1>
+                                        <p class="text-sm md:text-base text-gray-600">Crea y administra códigos de descuento.</p>
                                     </div>
-                                    <button onclick="showCreateCouponModal()" class="btn-primary rounded-lg px-4 py-2 flex items-center gap-2">
-                                        <i data-lucide="plus" class="h-4 w-4"></i> Crear Cupón
+                                    <button onclick="showCreateCouponModal()" class="btn-primary rounded-lg px-4 py-2 flex items-center gap-2 justify-center md:justify-start whitespace-nowrap">
+                                        <i data-lucide="plus" class="h-4 w-4"></i> <span>Crear Cupón</span>
                                     </button>
                                 </div>
                                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" id="coupons-grid">
@@ -557,32 +561,32 @@
                         <!-- Admin Pending Payments -->
                         <div id="admin-pending-payments" class="dashboard-subpage">
                             <div class="flex flex-col gap-6">
-                                <div class="flex justify-between items-center">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                                     <div>
-                                        <h1 class="text-3xl font-bold tracking-tight">Pagos Pendientes</h1>
-                                        <p class="text-gray-600">Aprueba o rechaza los pagos de los usuarios.</p>
+                                        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Pagos Pendientes</h1>
+                                        <p class="text-sm md:text-base text-gray-600">Aprueba o rechaza los pagos de los usuarios.</p>
                                     </div>
-                                    <button onclick="loadPendingPayments()" class="btn-primary rounded-lg px-4 py-2 flex items-center gap-2">
-                                        <i data-lucide="refresh-cw" class="h-4 w-4"></i> Actualizar
+                                    <button onclick="loadPendingPayments()" class="btn-primary rounded-lg px-4 py-2 flex items-center gap-2 justify-center md:justify-start whitespace-nowrap">
+                                        <i data-lucide="refresh-cw" class="h-4 w-4"></i> <span>Actualizar</span>
                                     </button>
                                 </div>
                                 <div class="rounded-xl border bg-white shadow-md overflow-hidden">
                                     <div class="overflow-x-auto">
-                                        <table class="w-full">
+                                        <table class="w-full min-w-[800px]">
                                             <thead class="bg-gray-50 border-b">
                                                 <tr>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Método</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Detalles</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Método</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden xl:table-cell">Detalles</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Fecha</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="pending-payments-table-body" class="divide-y divide-gray-200">
                                                 <tr>
-                                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">Cargando pagos...</td>
+                                                    <td colspan="7" class="px-3 md:px-6 py-4 text-center text-gray-500 text-sm">Cargando pagos...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -595,11 +599,11 @@
                         <div id="admin-payments" class="dashboard-subpage">
                             <div class="flex flex-col gap-6">
                                 <div>
-                                    <h1 class="text-3xl font-bold tracking-tight">Configuración de Pagos</h1>
-                                    <p class="text-gray-600">Configura los métodos de pago disponibles.</p>
+                                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Configuración de Pagos</h1>
+                                    <p class="text-sm md:text-base text-gray-600">Configura los métodos de pago disponibles.</p>
                                 </div>
                                 
-                                <div class="grid gap-6 md:grid-cols-3">
+                                <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
                                     <div class="rounded-xl border bg-white p-6 shadow-md">
                                         <div class="flex items-center gap-3 mb-4">
                                             <div class="rounded-full bg-indigo-100 p-3">
@@ -670,13 +674,13 @@
                         <!-- Admin Logs -->
                         <div id="admin-logs" class="dashboard-subpage">
                             <div class="flex flex-col gap-6">
-                                <div class="flex justify-between items-center">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                                     <div>
-                                        <h1 class="text-3xl font-bold tracking-tight">Logs del Sistema</h1>
-                                        <p class="text-gray-600">Historial de eventos y errores.</p>
+                                        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Logs del Sistema</h1>
+                                        <p class="text-sm md:text-base text-gray-600">Historial de eventos y errores.</p>
                                     </div>
                                     <div class="flex gap-2">
-                                        <select id="log-type-filter" onchange="loadLogs()" class="rounded-md border border-gray-300 px-3 py-2 text-sm">
+                                        <select id="log-type-filter" onchange="loadLogs()" class="rounded-md border border-gray-300 px-3 py-2 text-sm w-full md:w-auto">
                                             <option value="">Todos los tipos</option>
                                             <option value="payment">Pagos</option>
                                             <option value="error">Errores</option>
@@ -688,19 +692,19 @@
                                 </div>
                                 <div class="rounded-xl border bg-white shadow-md overflow-hidden">
                                     <div class="overflow-x-auto">
-                                        <table class="w-full">
+                                        <table class="w-full min-w-[640px]">
                                             <thead class="bg-gray-50 border-b">
                                                 <tr>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nivel</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mensaje</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Nivel</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mensaje</th>
+                                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Usuario</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="logs-table-body" class="divide-y divide-gray-200">
                                                 <tr>
-                                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">Cargando logs...</td>
+                                                    <td colspan="5" class="px-3 md:px-6 py-4 text-center text-gray-500 text-sm">Cargando logs...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -714,8 +718,8 @@
         </div>
 
         <!-- Modal Crear Cupón -->
-        <div id="coupon-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+        <div id="coupon-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 md:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
                 <h2 class="text-2xl font-bold mb-6">Crear Cupón</h2>
                 <form onsubmit="createCoupon(event)" class="space-y-4">
                     <div>
