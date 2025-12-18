@@ -516,23 +516,28 @@
                                     </div>
                                 </div>
                                 <div class="rounded-xl border bg-white shadow-md overflow-hidden">
-                                    <div class="overflow-x-auto -mx-4 sm:mx-0 px-2 sm:px-0">
-                                        <table class="w-full min-w-[680px] table-auto">
+                                    <!-- Desktop Table -->
+                                    <div class="hidden md:block overflow-x-auto">
+                                        <table class="w-full">
                                             <thead class="bg-gray-50 border-b">
                                                 <tr>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nombre</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Email</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Plan</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nombre</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Email</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Plan</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Estado</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="users-table-body" class="divide-y divide-gray-200">
                                                 <tr>
-                                                    <td colspan="5" class="px-2 md:px-4 py-4 text-center text-gray-500 text-sm">Cargando usuarios...</td>
+                                                    <td colspan="5" class="px-4 py-4 text-center text-gray-500 text-sm">Cargando usuarios...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <!-- Mobile Cards -->
+                                    <div id="users-cards-body" class="md:hidden p-4 space-y-4">
+                                        <p class="text-center text-gray-500 text-sm">Cargando usuarios...</p>
                                     </div>
                                 </div>
                             </div>
@@ -571,25 +576,30 @@
                                     </button>
                                 </div>
                                 <div class="rounded-xl border bg-white shadow-md overflow-hidden">
-                                    <div class="overflow-x-auto -mx-4 sm:mx-0 px-2 sm:px-0">
-                                        <table class="w-full min-w-[820px] table-auto">
+                                    <!-- Desktop Table -->
+                                    <div class="hidden md:block overflow-x-auto">
+                                        <table class="w-full">
                                             <thead class="bg-gray-50 border-b">
                                                 <tr>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Usuario</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Plan</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Monto</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Método</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Detalles</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Fecha</th>
-                                                    <th class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Usuario</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Plan</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Monto</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Método</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Detalles</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Fecha</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="pending-payments-table-body" class="divide-y divide-gray-200">
                                                 <tr>
-                                                    <td colspan="7" class="px-2 md:px-4 py-4 text-center text-gray-500 text-sm">Cargando pagos...</td>
+                                                    <td colspan="7" class="px-4 py-4 text-center text-gray-500 text-sm">Cargando pagos...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <!-- Mobile Cards -->
+                                    <div id="pending-payments-cards-body" class="md:hidden p-4 space-y-4">
+                                        <p class="text-center text-gray-500 text-sm">Cargando pagos...</p>
                                     </div>
                                 </div>
                             </div>

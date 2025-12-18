@@ -791,18 +791,21 @@ async function loadUsers() {
         const response = await AdminAPI.getAllUsers();
         if (response.success) {
             const tbody = document.getElementById('users-table-body');
+            const cardsBody = document.getElementById('users-cards-body');
             const users = response.data;
             
             if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-2 md:px-4 py-4 text-center text-gray-500 text-sm">No hay usuarios</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500 text-sm">No hay usuarios</td></tr>';
+                cardsBody.innerHTML = '<p class="text-center text-gray-500 text-sm">No hay usuarios</p>';
                 return;
             }
             
+            // Render desktop table
             tbody.innerHTML = users.map(user => `
                 <tr class="hover:bg-gray-50">
-                    <td class="px-2 md:px-4 py-4 text-sm font-medium text-gray-900">${user.name}</td>
-                    <td class="px-2 md:px-4 py-4 text-sm text-gray-500">${user.email}</td>
-                    <td class="px-2 md:px-4 py-4 text-sm">
+                    <td class="px-4 py-4 text-sm font-medium text-gray-900">${user.name}</td>
+                    <td class="px-4 py-4 text-sm text-gray-500">${user.email}</td>
+                    <td class="px-4 py-4 text-sm">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                             user.plan === 'Golden' ? 'bg-yellow-100 text-yellow-800' :
                             user.plan === 'Premium' ? 'bg-purple-100 text-purple-800' :
@@ -810,12 +813,12 @@ async function loadUsers() {
                             'bg-gray-100 text-gray-800'
                         }">${user.plan || 'Sin plan'}</span>
                     </td>
-                    <td class="px-2 md:px-4 py-4 text-sm">
+                    <td class="px-4 py-4 text-sm">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                             user.planStatus === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }">${user.planStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
                     </td>
-                    <td class="px-2 md:px-4 py-4 text-sm">
+                    <td class="px-4 py-4 text-sm">
                         <div class="flex gap-2 flex-wrap">
                             <button onclick="toggleUserStatus('${user._id}')" class="text-indigo-600 hover:text-indigo-800 text-xs">
                                 ${user.planStatus === 'active' ? 'Suspender' : 'Activar'}
@@ -826,6 +829,38 @@ async function loadUsers() {
                         </div>
                     </td>
                 </tr>
+            `).join('');
+            
+            // Render mobile cards
+            cardsBody.innerHTML = users.map(user => `
+                <div class="bg-white border rounded-lg p-4 space-y-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-semibold text-gray-900">${user.name}</p>
+                            <p class="text-xs text-gray-500">${user.email}</p>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                            user.planStatus === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }">${user.planStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">Plan:</span>
+                        <span class="ml-2 px-2 py-1 rounded-full text-xs font-semibold ${
+                            user.plan === 'Golden' ? 'bg-yellow-100 text-yellow-800' :
+                            user.plan === 'Premium' ? 'bg-purple-100 text-purple-800' :
+                            user.plan === 'Casual' ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-800'
+                        }">${user.plan || 'Sin plan'}</span>
+                    </div>
+                    <div class="flex gap-2 pt-2 border-t">
+                        <button onclick="toggleUserStatus('${user._id}')" class="flex-1 text-indigo-600 hover:text-indigo-800 text-xs font-medium py-2 border border-indigo-200 rounded">
+                            ${user.planStatus === 'active' ? 'Suspender' : 'Activar'}
+                        </button>
+                        <button onclick="showChangeUserPlanModal('${user._id}', '${user.plan}')" class="flex-1 text-green-600 hover:text-green-800 text-xs font-medium py-2 border border-green-200 rounded">
+                            Cambiar Plan
+                        </button>
+                    </div>
+                </div>
             `).join('');
             
             lucide.createIcons();
@@ -1080,13 +1115,16 @@ async function loadPendingPayments() {
         const response = await PaymentAPI.getPendingPayments();
         if (response.success) {
             const tbody = document.getElementById('pending-payments-table-body');
+            const cardsBody = document.getElementById('pending-payments-cards-body');
             const payments = response.data;
             
             if (payments.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-2 md:px-4 py-4 text-center text-gray-500 text-sm">No hay pagos pendientes</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500 text-sm">No hay pagos pendientes</td></tr>';
+                cardsBody.innerHTML = '<p class="text-center text-gray-500 text-sm">No hay pagos pendientes</p>';
                 return;
             }
             
+            // Render desktop table
             tbody.innerHTML = payments.map(payment => {
                 let detalles = '';
                 
@@ -1107,21 +1145,21 @@ async function loadPendingPayments() {
                 
                 return `
                     <tr class="hover:bg-gray-50">
-                        <td class="px-2 md:px-4 py-4 text-sm">
+                        <td class="px-4 py-4 text-sm">
                             <div>
                                 <p class="font-medium text-gray-900">${payment.user?.name || 'Usuario'}</p>
                                 <p class="text-gray-500 text-xs">${payment.user?.email || ''}</p>
                             </div>
                         </td>
-                        <td class="px-2 md:px-4 py-4 text-sm">
+                        <td class="px-4 py-4 text-sm">
                             <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                                 payment.plan === 'golden' ? 'bg-yellow-100 text-yellow-800' :
                                 payment.plan === 'premium' ? 'bg-purple-100 text-purple-800' :
                                 'bg-blue-100 text-blue-800'
                             }">${payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1)}</span>
                         </td>
-                        <td class="px-2 md:px-4 py-4 text-sm font-bold text-gray-900">${payment.amount}€</td>
-                        <td class="px-2 md:px-4 py-4 text-sm">
+                        <td class="px-4 py-4 text-sm font-bold text-gray-900">${payment.amount}€</td>
+                        <td class="px-4 py-4 text-sm">
                             <span class="px-2 py-1 rounded-full text-xs font-semibold ${
                                 payment.paymentMethod === 'paypal' ? 'bg-blue-100 text-blue-800' :
                                 payment.paymentMethod === 'usdc' ? 'bg-green-100 text-green-800' :
@@ -1132,9 +1170,9 @@ async function loadPendingPayments() {
                                 'Transferencia'
                             }</span>
                         </td>
-                        <td class="px-2 md:px-4 py-4 text-sm">${detalles}</td>
-                        <td class="px-2 md:px-4 py-4 text-sm text-gray-500">${new Date(payment.createdAt).toLocaleDateString()}</td>
-                        <td class="px-2 md:px-4 py-4 text-sm">
+                        <td class="px-4 py-4 text-sm">${detalles}</td>
+                        <td class="px-4 py-4 text-sm text-gray-500">${new Date(payment.createdAt).toLocaleDateString()}</td>
+                        <td class="px-4 py-4 text-sm">
                             <div class="flex gap-2">
                                 <button onclick="approvePayment('${payment._id}')" class="text-green-600 hover:text-green-800 font-medium text-xs">
                                     Aprobar
@@ -1146,6 +1184,51 @@ async function loadPendingPayments() {
                         </td>
                     </tr>
                 `;
+            }).join('');
+            
+            // Render mobile cards
+            cardsBody.innerHTML = payments.map(payment => {
+                const methodText = payment.paymentMethod === 'paypal' ? 'PayPal' :
+                                 payment.paymentMethod === 'usdc' ? 'USDC' : 'Transferencia';
+                
+                return `
+                    <div class="bg-white border rounded-lg p-4 space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-semibold text-gray-900">${payment.user?.name || 'Usuario'}</p>
+                                <p class="text-xs text-gray-500">${payment.user?.email || ''}</p>
+                            </div>
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                                payment.plan === 'golden' ? 'bg-yellow-100 text-yellow-800' :
+                                payment.plan === 'premium' ? 'bg-purple-100 text-purple-800' :
+                                'bg-blue-100 text-blue-800'
+                            }">${payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1)}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <div>
+                                <span class="text-xs text-gray-500">Monto:</span>
+                                <p class="font-bold text-gray-900">${payment.amount}€</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500">Método:</span>
+                                <p class="font-medium text-gray-900">${methodText}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500">Fecha:</span>
+                            <p class="text-sm text-gray-700">${new Date(payment.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex gap-2 pt-2 border-t">
+                            <button onclick="approvePayment('${payment._id}')" class="flex-1 text-green-600 hover:text-green-800 text-xs font-medium py-2 border border-green-200 rounded">
+                                Aprobar
+                            </button>
+                            <button onclick="rejectPayment('${payment._id}')" class="flex-1 text-red-600 hover:text-red-800 text-xs font-medium py-2 border border-red-200 rounded">
+                                Rechazar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
             }).join('');
             
             lucide.createIcons();
