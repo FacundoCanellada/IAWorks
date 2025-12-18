@@ -1229,7 +1229,6 @@ async function loadPendingPayments() {
                     </div>
                 `;
             }).join('');
-            }).join('');
             
             lucide.createIcons();
         }
