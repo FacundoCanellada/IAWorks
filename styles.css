@@ -435,13 +435,31 @@ html {
         font-size: 2rem;
     }
 
-    /* Admin sidebar */
+    /* Admin sidebar - Menu desplegable en móviles */
     #admin-sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid #e5e7eb;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 80% !important;
+        max-width: 280px;
+        height: 100vh !important;
+        z-index: 50;
+        transform: translateX(0);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #admin-sidebar.hidden {
+        transform: translateX(-100%);
+    }
+
+    #admin-sidebar-backdrop {
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    #admin-sidebar-backdrop.hidden {
+        opacity: 0;
+        pointer-events: none;
     }
 
     #admin-content {

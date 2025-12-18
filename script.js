@@ -694,6 +694,33 @@ function initChart() {
 
 // ========== FUNCIONES DE ADMIN ==========
 
+// Toggle del sidebar en móviles
+function toggleAdminSidebar() {
+    const sidebar = document.getElementById('admin-sidebar');
+    const backdrop = document.getElementById('admin-sidebar-backdrop');
+    
+    if (sidebar && backdrop) {
+        const isHidden = sidebar.classList.contains('hidden');
+        
+        if (isHidden) {
+            // Mostrar sidebar
+            sidebar.classList.remove('hidden');
+            backdrop.classList.remove('hidden');
+            // Prevenir scroll del body
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Ocultar sidebar
+            sidebar.classList.add('hidden');
+            backdrop.classList.add('hidden');
+            // Restaurar scroll del body
+            document.body.style.overflow = '';
+        }
+        
+        // Reiniciar iconos
+        setTimeout(() => lucide.createIcons(), 50);
+    }
+}
+
 function showAdminSubpage(subpageId) {
     document.querySelectorAll('.dashboard-subpage').forEach(p => p.classList.remove('active'));
     const targetSubpage = document.getElementById(subpageId);
